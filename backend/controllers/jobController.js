@@ -15,6 +15,48 @@ exports.getJobs = async (req, res) => {
   }
 };
 
+// GET /api/jobs/match?skills=React,HTML,CSS  (optional: &category=Frontend Developer)
+exports.getMatchedJobs = async (req, res) => {
+  try {
+    const userSkills = (req.query.skills || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (userSkills.length === 0) {
+      return res.status(400).json({ message: 'Please provide skills, e.g. ?skills=React,HTML' });
+    }
+
+    const userSkillsLower = userSkills.map((s) => s.toLowerCase());
+
+    const filter = {};
+    if (req.query.category) filter.careerCategory = req.query.category;
+
+    const jobs = await Job.find(filter);
+
+    const results = jobs.map((job) => {
+      const required = job.requiredSkills;
+      const matchedSkills = required.filter((s) =>
+        userSkillsLower.includes(s.toLowerCase())
+      );
+      const missingSkills = required.filter(
+        (s) => !userSkillsLower.includes(s.toLowerCase())
+      );
+      const matchPercent =
+        required.length === 0
+          ? 0
+          : Math.round((matchedSkills.length / required.length) * 100);
+
+      return { ...job.toObject(), matchPercent, matchedSkills, missingSkills };
+    });
+
+    results.sort((a, b) => b.matchPercent - a.matchPercent);
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to match jobs', error: err.message });
+  }
+};
+
 // GET /api/jobs/:id
 exports.getJobById = async (req, res) => {
   try {

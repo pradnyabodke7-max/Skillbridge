@@ -4,24 +4,56 @@ import api from '../api';
 export default function JobsPage() {
   const [jobs, setJobs] = useState([]);
   const [category, setCategory] = useState('All');
+  const [skillsInput, setSkillsInput] = useState('');
+  const [appliedSkills, setAppliedSkills] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api
-      .get('/jobs')
+    setLoading(true);
+    setError('');
+
+    const request = appliedSkills
+      ? api.get('/jobs/match', { params: { skills: appliedSkills } })
+      : api.get('/jobs');
+
+    request
       .then((res) => setJobs(res.data))
       .catch(() => setError('Could not load jobs. Is the backend running?'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [appliedSkills]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setAppliedSkills(skillsInput.trim());
+  };
 
   const categories = ['All', ...new Set(jobs.map((j) => j.careerCategory))];
   const visibleJobs =
     category === 'All' ? jobs : jobs.filter((j) => j.careerCategory === category);
 
+  const badgeClass = (percent) => {
+    if (percent >= 70) return 'match-badge high';
+    if (percent >= 40) return 'match-badge medium';
+    return 'match-badge low';
+  };
+
   return (
     <div className="page">
       <h1>Job Recommendations</h1>
+      <p className="message">
+        Enter your skills (separated by commas) to see how well you match each job.
+      </p>
+
+      <form className="search-bar" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="e.g. React, JavaScript, HTML, CSS, Git"
+          value={skillsInput}
+          onChange={(e) => setSkillsInput(e.target.value)}
+        />
+        <button type="submit">Find matches</button>
+      </form>
 
       <div className="toolbar">
         <label htmlFor="category">Career category:</label>
@@ -42,22 +74,39 @@ export default function JobsPage() {
       {error && <p className="message error">{error}</p>}
 
       <div className="job-grid">
-        {visibleJobs.map((job) => (
-          <div className="job-card" key={job._id}>
-            <h3>{job.title}</h3>
-            <p className="company">{job.company}</p>
-            <p className="meta">
-              {job.location} • {job.jobType} • {job.experienceLevel}
-            </p>
-            <div className="skills">
-              {job.requiredSkills.map((skill) => (
-                <span className="skill-tag" key={skill}>
-                  {skill}
+        {visibleJobs.map((job) => {
+          const hasMatch = job.matchPercent !== undefined;
+
+          return (
+            <div className="job-card" key={job._id}>
+              {hasMatch && (
+                <span className={badgeClass(job.matchPercent)}>
+                  {job.matchPercent}% match
                 </span>
-              ))}
+              )}
+              <h3>{job.title}</h3>
+              <p className="company">{job.company}</p>
+              <p className="meta">
+                {job.location} • {job.jobType} • {job.experienceLevel}
+              </p>
+              <div className="skills">
+                {job.requiredSkills.map((skill) => {
+                  let tagClass = 'skill-tag';
+                  if (hasMatch) {
+                    tagClass += job.matchedSkills.includes(skill)
+                      ? ' matched'
+                      : ' missing';
+                  }
+                  return (
+                    <span className={tagClass} key={skill}>
+                      {skill}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
