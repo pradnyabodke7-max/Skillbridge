@@ -1,5 +1,6 @@
 import { Routes, Route, NavLink } from 'react-router-dom';
 import JobsPage from './pages/JobsPage';
+import JobDetailsPage from './pages/JobDetailsPage';
 
 function Home() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/jobs/:id" element={<JobDetailsPage />} />
       </Routes>
     </>
   );

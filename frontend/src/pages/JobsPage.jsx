@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import api from '../api';
 
 export default function JobsPage() {
+  const [searchParams] = useSearchParams();
+  const initialSkills = searchParams.get('skills') || '';
+
   const [jobs, setJobs] = useState([]);
   const [category, setCategory] = useState('All');
-  const [skillsInput, setSkillsInput] = useState('');
-  const [appliedSkills, setAppliedSkills] = useState('');
+  const [skillsInput, setSkillsInput] = useState(initialSkills);
+  const [appliedSkills, setAppliedSkills] = useState(initialSkills);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -37,6 +41,11 @@ export default function JobsPage() {
     if (percent >= 40) return 'match-badge medium';
     return 'match-badge low';
   };
+
+  const detailsLink = (id) =>
+    appliedSkills
+      ? `/jobs/${id}?skills=${encodeURIComponent(appliedSkills)}`
+      : `/jobs/${id}`;
 
   return (
     <div className="page">
@@ -78,33 +87,35 @@ export default function JobsPage() {
           const hasMatch = job.matchPercent !== undefined;
 
           return (
-            <div className="job-card" key={job._id}>
-              {hasMatch && (
-                <span className={badgeClass(job.matchPercent)}>
-                  {job.matchPercent}% match
-                </span>
-              )}
-              <h3>{job.title}</h3>
-              <p className="company">{job.company}</p>
-              <p className="meta">
-                {job.location} • {job.jobType} • {job.experienceLevel}
-              </p>
-              <div className="skills">
-                {job.requiredSkills.map((skill) => {
-                  let tagClass = 'skill-tag';
-                  if (hasMatch) {
-                    tagClass += job.matchedSkills.includes(skill)
-                      ? ' matched'
-                      : ' missing';
-                  }
-                  return (
-                    <span className={tagClass} key={skill}>
-                      {skill}
-                    </span>
-                  );
-                })}
+            <Link className="job-card-link" to={detailsLink(job._id)} key={job._id}>
+              <div className="job-card">
+                {hasMatch && (
+                  <span className={badgeClass(job.matchPercent)}>
+                    {job.matchPercent}% match
+                  </span>
+                )}
+                <h3>{job.title}</h3>
+                <p className="company">{job.company}</p>
+                <p className="meta">
+                  {job.location} • {job.jobType} • {job.experienceLevel}
+                </p>
+                <div className="skills">
+                  {job.requiredSkills.map((skill) => {
+                    let tagClass = 'skill-tag';
+                    if (hasMatch) {
+                      tagClass += job.matchedSkills.includes(skill)
+                        ? ' matched'
+                        : ' missing';
+                    }
+                    return (
+                      <span className={tagClass} key={skill}>
+                        {skill}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
