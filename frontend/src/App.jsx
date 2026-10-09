@@ -1,32 +1,63 @@
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, NavLink, Link } from 'react-router-dom';
+import { LayoutDashboard, Briefcase } from 'lucide-react';
 import JobsPage from './pages/JobsPage';
 import JobDetailsPage from './pages/JobDetailsPage';
+
+// Teammates: add your own pages to this list and to <Routes> below
+const navItems = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/jobs', label: 'Jobs', icon: Briefcase, end: false },
+];
 
 function Home() {
   return (
     <div className="page">
-      <h1>SkillBridge</h1>
-      <p>AI-Based Career &amp; Skill Development Platform</p>
+      <div className="hero">
+        <h1>Welcome to SkillBridge</h1>
+        <p>Find jobs that fit your skills and see exactly what to learn next.</p>
+        <Link className="hero-btn" to="/jobs">
+          Explore jobs
+        </Link>
+      </div>
     </div>
   );
 }
 
 export default function App() {
   return (
-    <>
-      <nav className="navbar">
-        <span className="brand">SkillBridge</span>
-        <div className="links">
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/jobs">Jobs</NavLink>
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="logo">
+          <span className="logo-mark">S</span>
+          <span className="logo-text">SkillBridge</span>
         </div>
-      </nav>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<JobsPage />} />
-        <Route path="/jobs/:id" element={<JobDetailsPage />} />
-      </Routes>
-    </>
+        <nav className="side-nav">
+          {navItems.map(({ to, label, icon: Icon, end }) => (
+            <NavLink key={to} to={to} end={end} className="side-link">
+              <Icon size={19} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="side-footer">AI Career &amp; Skill Platform</div>
+      </aside>
+
+      <div className="main-area">
+        <header className="topbar">
+          <span className="topbar-title">AI Career &amp; Skill Development Platform</span>
+          <div className="avatar">S</div>
+        </header>
+
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs/:id" element={<JobDetailsPage />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
   );
 }

@@ -57,3 +57,21 @@
   font-weight: 600;
   text-decoration: none;
 }
+.details-card .skill-tag {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.details-card .skill-tag.matched {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.details-card .skill-tag.missing {
+  background: #fecaca;
+  color: #991b1b;
+}
+
+.details-card {
+  border-radius: 20px;
+}
