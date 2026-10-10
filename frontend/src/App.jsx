@@ -1,11 +1,13 @@
 import { Routes, Route, NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Briefcase } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Target } from 'lucide-react';
 import JobsPage from './pages/JobsPage';
 import JobDetailsPage from './pages/JobDetailsPage';
+import CareerGoalPage from './pages/CareerGoalPage';
 
 // Teammates: add your own pages to this list and to <Routes> below
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/careers', label: 'Career Goal', icon: Target, end: false },
   { to: '/jobs', label: 'Jobs', icon: Briefcase, end: false },
 ];
 
@@ -15,8 +17,8 @@ function Home() {
       <div className="hero">
         <h1>Welcome to SkillBridge</h1>
         <p>Find jobs that fit your skills and see exactly what to learn next.</p>
-        <Link className="hero-btn" to="/jobs">
-          Explore jobs
+        <Link className="hero-btn" to="/careers">
+          Choose your career goal
         </Link>
       </div>
     </div>
@@ -53,6 +55,7 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/careers" element={<CareerGoalPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/jobs/:id" element={<JobDetailsPage />} />
           </Routes>

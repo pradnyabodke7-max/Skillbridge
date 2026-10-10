@@ -5,9 +5,10 @@ import api from '../api';
 export default function JobsPage() {
   const [searchParams] = useSearchParams();
   const initialSkills = searchParams.get('skills') || '';
+  const initialCategory = searchParams.get('category') || 'All';
 
   const [jobs, setJobs] = useState([]);
-  const [category, setCategory] = useState('All');
+  const [category, setCategory] = useState(initialCategory);
   const [skillsInput, setSkillsInput] = useState(initialSkills);
   const [appliedSkills, setAppliedSkills] = useState(initialSkills);
   const [loading, setLoading] = useState(true);

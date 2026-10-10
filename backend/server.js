@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const jobRoutes = require('./routes/jobRoutes');
+const careerRoutes = require('./routes/careerRoutes');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/jobs', jobRoutes);
+app.use('/api/careers', careerRoutes);
 
 const PORT = process.env.PORT || 5000;
 
