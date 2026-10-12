@@ -232,3 +232,50 @@ body {
   margin-bottom: 4px;
   font-size: 0.9rem;
 }
+/* ===== Interview module (Member 3) ===== */
+.answer-box {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.answer-box:disabled {
+  background: #f3f4f6;
+}
+
+.feedback-box {
+  margin-top: 18px;
+  padding: 16px;
+  background: #f4f6fb;
+  border-radius: 10px;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.score-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.score-box span {
+  display: block;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.qa-item {
+  padding: 12px 0;
+  border-top: 1px solid #e5e7eb;
+}
