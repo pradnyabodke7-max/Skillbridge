@@ -1,13 +1,15 @@
 import { Routes, Route, NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Briefcase, Target } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Target, Map as MapIcon } from 'lucide-react';
 import JobsPage from './pages/JobsPage';
 import JobDetailsPage from './pages/JobDetailsPage';
 import CareerGoalPage from './pages/CareerGoalPage';
+import RoadmapPage from './pages/RoadmapPage';
 
 // Teammates: add your own pages to this list and to <Routes> below
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/careers', label: 'Career Goal', icon: Target, end: false },
+  { to: '/roadmap', label: 'Roadmap', icon: MapIcon, end: false },
   { to: '/jobs', label: 'Jobs', icon: Briefcase, end: false },
 ];
 
@@ -56,6 +58,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/careers" element={<CareerGoalPage />} />
+            <Route path="/roadmap" element={<RoadmapPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/jobs/:id" element={<JobDetailsPage />} />
           </Routes>

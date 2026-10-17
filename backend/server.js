@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const jobRoutes = require('./routes/jobRoutes');
 const careerRoutes = require('./routes/careerRoutes');
+const roadmapRoutes = require('./routes/roadmapRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/jobs', jobRoutes);
 app.use('/api/careers', careerRoutes);
+app.use('/api/roadmaps', roadmapRoutes);
 
 const PORT = process.env.PORT || 5000;
 
